@@ -1,0 +1,34 @@
+<%- include("partials/header") %>
+
+<div class="sort-bar">
+  <span>Sort by:</span>
+  <a href="/?sort=rating">⭐ Rating</a>
+  <a href="/?sort=recent">🕒 Recent</a>
+  <a href="/?sort=title">🔤 Title</a>
+</div>
+
+<div class="book-grid">
+  <% books.forEach(book => { %>
+    <div class="book-card">
+      <img src="<%= book.coverUrl %>" alt="Book cover" />
+      <h3><%= book.title %></h3>
+      <p class="author"><%= book.author %></p>
+
+      <p class="notes"><%= book.notes %></p>
+
+      <div class="meta">
+        <span>⭐ <%= book.rating %></span>
+        <span>📅 <%= book.date_read %></span>
+      </div>
+
+      <div class="actions">
+        <a href="/edit/<%= book.id %>">Edit</a>
+        <form action="/delete/<%= book.id %>" method="POST">
+          <button>Delete</button>
+        </form>
+      </div>
+    </div>
+  <% }) %>
+</div>
+
+<%- include("partials/footer") %>

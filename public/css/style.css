@@ -1,0 +1,158 @@
+:root {
+  --magenta: #c026d3;
+  --magenta-light: #f5d0fe;
+  --magenta-bg: #fff1fb;
+  --text-dark: #3b0764;
+  --card-bg: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  background: var(--magenta-bg);
+  color: var(--text-dark);
+}
+
+/* Header */
+.top-bar {
+  background: var(--magenta);
+  color: white;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.top-bar a {
+  color: white;
+  margin-left: 1rem;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+/* Layout */
+.container {
+  max-width: 1100px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+/* Sorting */
+.sort-bar {
+  margin-bottom: 1.5rem;
+}
+
+.sort-bar a {
+  margin-left: 0.5rem;
+  color: var(--magenta);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+/* Grid */
+.book-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Cards */
+.book-card {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 1rem;
+  box-shadow: 0 10px 20px rgba(192, 38, 211, 0.1);
+  transition: transform 0.2s;
+}
+
+.book-card:hover {
+  transform: translateY(-4px);
+}
+
+.book-card img {
+  width: 100%;
+  border-radius: 12px;
+  margin-bottom: 0.5rem;
+}
+
+.book-card h3 {
+  margin: 0.5rem 0 0.2rem;
+}
+
+.author {
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+.notes {
+  font-size: 0.9rem;
+  margin: 0.5rem 0;
+}
+
+.meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+}
+
+/* Actions */
+.actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+}
+
+.actions a,
+.actions button {
+  background: none;
+  border: none;
+  color: var(--magenta);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Form */
+.book-form {
+  background: white;
+  padding: 2rem;
+  border-radius: 16px;
+  max-width: 500px;
+}
+
+.book-form label {
+  display: block;
+  margin-top: 1rem;
+  font-weight: 600;
+}
+
+.book-form input,
+.book-form textarea {
+  width: 100%;
+  padding: 0.6rem;
+  margin-top: 0.3rem;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.book-form button {
+  margin-top: 1.5rem;
+  background: var(--magenta);
+  color: white;
+  border: none;
+  padding: 0.7rem 1.2rem;
+  border-radius: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 2rem;
+  font-size: 0.8rem;
+  opacity: 0.6;
+}
