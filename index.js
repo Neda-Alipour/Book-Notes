@@ -63,6 +63,19 @@ app.get("/add", (req, res) => {
   res.render("add.ejs");
 });
 
+app.post("/add", async (req, res) => {
+  try {
+    const { title, author, notes, rating, date_read, coverUrl } = req.body
+    const result = await db.query(
+      "INSERT INTO books (title, author, notes, rating, date_read, coverUrl) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
+      [title, author, notes, rating, date_read, coverUrl]
+    );
+  } catch(err){
+    console.log(err)
+  }
+  res.redirect("/");
+});
+
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
