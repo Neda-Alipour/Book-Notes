@@ -19,6 +19,45 @@ const db = new pg.Client({
 });
 db.connect();
 
+app.get("/", async (req, res) => {
+  try {
+    let sort = req.query.sort;
+    let orderBy = "date_read DESC";
+
+    if (sort === "rating") orderBy = "rating DESC";
+    if (sort === "title") orderBy = "title ASC";
+
+    const result = await db.query("SELECT * FROM books ORDER BY " + orderBy);
+
+    if (result.rows.length !== 0) books = result.rows
+  } catch (err) {
+    console.log(err)
+  }
+  res.render("index.ejs", { books: books });
+});
+
+app.get("/add", (req, res) => {
+  res.render("add.ejs");
+});
+
+app.post("/add", async (req, res) => {
+  try {
+    const { title, author, notes, rating, date_read, coverUrl } = req.body
+    const result = await db.query(
+      "INSERT INTO books (title, author, notes, rating, date_read, coverUrl) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
+      [title, author, notes, rating, date_read, coverUrl]
+    );
+  } catch (err) {
+    console.log(err)
+  }
+  res.redirect("/");
+});
+
+
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
+
 let books = [
   {
     id: 1,
@@ -47,35 +86,13 @@ let books = [
     date_read: "2255",
     coverUrl: "https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1560816565i/48855.jpg"
   },
+  {
+    id: 4,
+    title: "The Diary of a Young Girl",
+    author: "Anne Frank",
+    notes: "It's good. Discovered in the attic where she spent the final years of her life, Anne Frank’s Diary has become a timeless classic; a powerful reminder of the horrors of war and a moving testament to the resilience of the human spirit.It's good. Discovered in the attic where she spent the final years of her life, Anne Frank’s Diary has become a timeless classic; a powerful reminder of the horrors of war and a moving testament to the resilience of the human spirit.It's good. Discovered in the attic where she spent the final years of her life, Anne Frank’s Diary has become a timeless classic; a powerful reminder of the horrors of war and a moving testament to the resilience of the human spirit.",
+    rating: 0,
+    date_read: "2255",
+    coverUrl: "https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1560816565i/48855.jpg"
+  },
 ]
-
-app.get("/", async (req, res) => {
-  try {
-    const result = await db.query("SELECT * FROM books");
-    if (result.rows.length !== 0) books = result.rows
-  } catch(err){
-    console.log(err)
-  }
-  res.render("index.ejs", { books: books });
-});
-
-app.get("/add", (req, res) => {
-  res.render("add.ejs");
-});
-
-app.post("/add", async (req, res) => {
-  try {
-    const { title, author, notes, rating, date_read, coverUrl } = req.body
-    const result = await db.query(
-      "INSERT INTO books (title, author, notes, rating, date_read, coverUrl) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
-      [title, author, notes, rating, date_read, coverUrl]
-    );
-  } catch(err){
-    console.log(err)
-  }
-  res.redirect("/");
-});
-
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
