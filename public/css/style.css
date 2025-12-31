@@ -17,14 +17,25 @@ body {
   color: var(--text-dark);
 }
 
-/* Header */
+/* Header - Glassy and Thinner */
 .top-bar {
-  background: var(--magenta);
+  background: rgba(192, 38, 211, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   color: white;
-  padding: 1rem 2rem;
+  padding: 0.5rem 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.top-bar h1 {
+  margin: 0;
+  font-size: 1.3rem;
 }
 
 .top-bar a {
@@ -32,6 +43,11 @@ body {
   margin-left: 1rem;
   text-decoration: none;
   font-weight: 600;
+  transition: opacity 0.2s;
+}
+
+.top-bar a:hover {
+  opacity: 0.8;
 }
 
 /* Layout */
@@ -60,13 +76,16 @@ body {
   gap: 1.5rem;
 }
 
-/* Cards */
+/* Cards - Fixed Height */
 .book-card {
   background: var(--card-bg);
   border-radius: 16px;
   padding: 1rem;
   box-shadow: 0 10px 20px rgba(192, 38, 211, 0.1);
   transition: transform 0.2s;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .book-card:hover {
@@ -75,6 +94,8 @@ body {
 
 .book-card img {
   width: 100%;
+  height: 200px;
+  object-fit: cover;
   border-radius: 12px;
   margin-bottom: 0.5rem;
 }
@@ -91,12 +112,20 @@ body {
 .notes {
   font-size: 0.9rem;
   margin: 0.5rem 0;
+  flex-grow: 1;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  line-clamp: 4;
 }
 
 .meta {
   display: flex;
   justify-content: space-between;
   font-size: 0.8rem;
+  margin-top: auto;
+  padding-top: 0.5rem;
 }
 
 /* Actions */
@@ -104,6 +133,8 @@ body {
   display: flex;
   justify-content: space-between;
   margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid #eee;
 }
 
 .actions a,
@@ -113,14 +144,30 @@ body {
   color: var(--magenta);
   font-weight: 600;
   cursor: pointer;
+  font-size: 0.9rem;
+  text-decoration: none;
 }
 
-/* Form */
+.actions a:hover,
+.actions button:hover {
+  opacity: 0.7;
+}
+
+/* Form - Centered */
 .book-form {
   background: white;
   padding: 2rem;
   border-radius: 16px;
   max-width: 500px;
+  margin: 0 auto;
+  box-shadow: 0 10px 30px rgba(192, 38, 211, 0.15);
+}
+
+.book-form h2 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  color: var(--magenta);
 }
 
 .book-form label {
@@ -136,6 +183,18 @@ body {
   margin-top: 0.3rem;
   border-radius: 8px;
   border: 1px solid #ddd;
+  transition: border-color 0.2s;
+}
+
+.book-form input:focus,
+.book-form textarea:focus {
+  outline: none;
+  border-color: var(--magenta);
+}
+
+.book-form textarea {
+  min-height: 100px;
+  resize: vertical;
 }
 
 .book-form button {
@@ -147,6 +206,19 @@ body {
   border-radius: 10px;
   font-size: 1rem;
   cursor: pointer;
+  width: 100%;
+  transition: background 0.2s;
+}
+
+.book-form button:hover {
+  background: #a21caf;
+}
+
+/* Page titles */
+.page-title {
+  text-align: center;
+  color: var(--magenta);
+  margin-bottom: 1.5rem;
 }
 
 /* Footer */
@@ -155,4 +227,85 @@ body {
   padding: 2rem;
   font-size: 0.8rem;
   opacity: 0.6;
+}
+
+/* Delete Confirmation Modal */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-overlay.active {
+  display: flex;
+}
+
+.modal {
+  background: white;
+  padding: 2rem;
+  border-radius: 16px;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  animation: modalSlideIn 0.3s ease;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal h3 {
+  margin-top: 0;
+  color: var(--text-dark);
+}
+
+.modal p {
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.modal-actions button {
+  padding: 0.6rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  border: none;
+  font-weight: 600;
+  transition: opacity 0.2s;
+}
+
+.modal-actions .btn-cancel {
+  background: #e5e5e5;
+  color: #333;
+}
+
+.modal-actions .btn-delete {
+  background: #dc2626;
+  color: white;
+}
+
+.modal-actions button:hover {
+  opacity: 0.8;
 }
