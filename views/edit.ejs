@@ -9,8 +9,8 @@
       <label>Author</label>
       <input name="author" value="<%= book.author %>" />
 
-      <label>Rating (1–5)</label>
-      <input type="number" name="rating" min="1" max="5" value="<%= book.rating %>" />
+      <label>Rating (0–5)</label>
+      <input type="number" name="rating" min="0" max="5" step="0.1" value="<%= book.rating %>" />
 
       <label>Notes</label>
       <textarea name="notes"><%= book.notes %></textarea>
@@ -19,7 +19,7 @@
       <input name="date_read" value="<%= book.date_read %>" />
 
       <label>Cover URL</label>
-      <input name="coverUrl" value="<%= book.coverUrl %>" />
+      <input name="cover_url" value="<%= book.cover_url %>" />
 
       <button>Save Changes</button>
     </form>

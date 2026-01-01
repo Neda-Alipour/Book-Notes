@@ -9,10 +9,12 @@
 
   <div class="book-grid">
     <% books.forEach(book=> { %>
-      <div class="book-card">
-        <img src="<%= book.coverUrl %>" alt="Book cover" />
+      <div class="book-card" onclick="window.location.href='/book/<%= book.id %>'" style="cursor: pointer;">
+        <img src="<%= book.cover_url %>" alt="Book cover" />
         <h3>
-          <%= book.title %>
+          <a href="/book/<%= book.id %>">
+            <%= book.title %>
+          </a>
         </h3>
         <p class="author">
           <%= book.author %>
@@ -20,8 +22,21 @@
         <p class="notes">
           <%= book.notes %>
         </p>
+        <a href="/book/<%= book.id %>" class="read-more">Read Full Notes &rarr;</a>
         <div class="meta">
-          <span>⭐ <%= book.rating %></span>
+          <div class="star-rating">
+            <% const rating=parseFloat(book.rating) || 0; %>
+              <% for (let i=1; i <=5; i++) { %>
+                <% if (i <=Math.floor(rating)) { %>
+                  <span class="star filled">★</span>
+                  <% } else if (i===Math.ceil(rating) && rating % 1 !==0) { %>
+                    <span class="star partial" style="--fill-percent: <%= (rating % 1) * 100 %>%">★</span>
+                    <% } else { %>
+                      <span class="star empty">★</span>
+                      <% } %>
+                        <% } %>
+                          <span class="rating-value">(<%= book.rating %>)</span>
+          </div>
           <span>📅 <%= book.date_read %></span>
         </div>
         <div class="actions">
