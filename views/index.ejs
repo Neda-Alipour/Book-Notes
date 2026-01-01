@@ -1,11 +1,9 @@
 <%- include("partials/header") %>
 
   <div class="sort-bar">
-    <span>Sort by:</span>
-    <a href="/?sort=rating" class="<%= (locals.currentSort === 'rating') ? 'active' : '' %>">⭐ Rating</a>
-    <a href="/?sort=recent" class="<%= (!locals.currentSort || locals.currentSort === 'recent') ? 'active' : '' %>">🕒
-      Recent</a>
-    <a href="/?sort=title" class="<%= (locals.currentSort === 'title') ? 'active' : '' %>">🔤 Title</a>
+    <a href="/?sort=rating" class="<%= currentSort === 'rating' ? 'active' : '' %>">⭐ Rating</a>
+    <a href="/?sort=recent" class="<%= !currentSort || currentSort === 'recent' ? 'active' : '' %>">🕒 Recent</a>
+    <a href="/?sort=title" class="<%= currentSort === 'title' ? 'active' : '' %>">🔤 Title</a>
   </div>
 
   <div class="book-grid">

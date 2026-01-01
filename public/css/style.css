@@ -103,40 +103,34 @@ body {
 .sort-bar {
   margin-bottom: 2rem;
   display: flex;
-  align-items: center;
+  justify-content: center;
   gap: 1rem;
-  background: white;
-  padding: 0.75rem 1.5rem;
-  border-radius: 20px;
-  width: fit-content;
-  box-shadow: var(--shadow);
-}
-
-.sort-bar span {
-  font-weight: 700;
-  color: #9ca3af;
-  font-size: 0.9rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
 }
 
 .sort-bar a {
   text-decoration: none;
-  color: var(--text-muted);
   font-weight: 600;
-  padding: 0.4rem 1rem;
-  border-radius: 12px;
-  background: #f3f4f6;
-  transition: all 0.2s;
   font-size: 0.95rem;
+
+  color: var(--text-muted);
+  padding: 0.6rem 1.2rem;
+  border-radius: 16px;
+
+  background: white;
+  box-shadow: var(--shadow);
+
+  transition: all 0.2s ease;
 }
 
-.sort-bar a:hover,
+.sort-bar a:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+}
+
 .sort-bar a.active {
   background: var(--primary);
   color: white;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+  transform: translateY(-2px);
 }
 
 /* Grid & Cards */
