@@ -53,6 +53,19 @@ app.post("/add", async (req, res) => {
   res.redirect("/");
 });
 
+app.post("/delete/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    await db.query("DELETE FROM books WHERE id = $1", [id]);
+  } catch (err) {
+    console.log(err);
+    const bookIndex = books.findIndex(b => b.id == req.params.id);
+    if (bookIndex !== -1) {
+      books.splice(bookIndex, 1);
+    }
+  }
+  res.redirect("/");
+});
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
