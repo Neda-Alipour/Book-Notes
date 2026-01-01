@@ -53,6 +53,59 @@ app.post("/add", async (req, res) => {
   res.redirect("/");
 });
 
+app.get("/edit/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    const result = await db.query("SELECT * FROM books WHERE id = $1", [id]);
+
+    if (result.rows.length > 0) {
+      res.render("edit.ejs", { book: result.rows[0] });
+    } else {
+      const book = books.find(b => b.id == id);
+      if (book) {
+        res.render("edit.ejs", { book: book });
+      } else {
+        res.redirect("/");
+      }
+    }
+  } catch (err) {
+    console.log(err);
+    const book = books.find(b => b.id == req.params.id);
+    if (book) {
+      res.render("edit.ejs", { book: book });
+    } else {
+      res.redirect("/");
+    }
+  }
+});
+
+app.post("/edit/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const { title, author, notes, rating, date_read, coverUrl } = req.body;
+    await db.query(
+      "UPDATE books SET title = $1, author = $2, notes = $3, rating = $4, date_read = $5, coverUrl = $6 WHERE id = $7",
+      [title, author, notes, rating, date_read, coverUrl, id]
+    );
+  } catch (err) {
+    console.log(err);
+    const bookIndex = books.findIndex(b => b.id == req.params.id);
+    if (bookIndex !== -1) {
+      books[bookIndex] = {
+        ...books[bookIndex],
+        title: req.body.title,
+        author: req.body.author,
+        notes: req.body.notes,
+        rating: req.body.rating,
+        date_read: req.body.date_read,
+        coverUrl: req.body.coverUrl
+      };
+    }
+  }
+  res.redirect("/");
+});
+
 app.post("/delete/:id", async (req, res) => {
   try {
     const id = req.params.id;
