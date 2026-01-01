@@ -19,9 +19,25 @@ const db = new pg.Client({
 });
 db.connect();
 
+function sortLocalBooks(books, sort) {
+  const sorted = [...books]; // do NOT mutate original array
+
+  if (sort === "rating") {
+    sorted.sort((a, b) => b.rating - a.rating);
+  } else if (sort === "title") {
+    sorted.sort((a, b) => a.title.localeCompare(b.title));
+  } else {
+    // default: date_read DESC
+    sorted.sort((a, b) => new Date(b.date_read) - new Date(a.date_read));
+  }
+
+  return sorted;
+}
+
 app.get("/", async (req, res) => {
+  let sort = req.query.sort;
+  let booksToShow = []
   try {
-    let sort = req.query.sort;
     let orderBy = "date_read DESC";
 
     if (sort === "rating") orderBy = "rating DESC";
@@ -29,11 +45,16 @@ app.get("/", async (req, res) => {
 
     const result = await db.query("SELECT * FROM books ORDER BY " + orderBy);
 
-    if (result.rows.length !== 0) books = result.rows
+    if (result.rows.length !== 0) {
+      booksToShow = result.rows
+    } else {
+      booksToShow = sortLocalBooks(books, sort);
+    }
   } catch (err) {
     console.log(err)
+    booksToShow = sortLocalBooks(books, sort);
   }
-  res.render("index.ejs", { books: books });
+  res.render("index.ejs", { books: booksToShow, currentSort: sort });
 });
 
 app.get("/add", (req, res) => {
@@ -42,7 +63,8 @@ app.get("/add", (req, res) => {
 
 app.post("/add", async (req, res) => {
   try {
-    const { title, author, notes, rating, date_read, cover_url } = req.body
+    let { title, author, notes, rating, date_read, cover_url } = req.body
+    if (!cover_url) cover_url = "/images/IMG_1644.JPEG";
     const result = await db.query(
       "INSERT INTO books (title, author, notes, rating, date_read, cover_url) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
       [title, author, notes, rating, date_read, cover_url]
@@ -158,7 +180,7 @@ let books = [
     author: "Harper Lee",
     notes: "It's good",
     rating: 5,
-    date_read: "2024-01-01",
+    date_read: "2024-01-06",
     cover_url: "https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1553383690i/2657.jpg"
   },
   {
@@ -167,7 +189,7 @@ let books = [
     author: "George Orwell",
     notes: "It's bad",
     rating: 3.75,
-    date_read: "2024-01-01",
+    date_read: "2024-01-10",
     cover_url: "https://m.media-amazon.com/images/S/compressed.photo.goodreads.com/books/1657781256i/61439040.jpg"
   },
   {

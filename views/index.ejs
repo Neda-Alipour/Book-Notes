@@ -2,9 +2,10 @@
 
   <div class="sort-bar">
     <span>Sort by:</span>
-    <a href="/?sort=rating">⭐ Rating</a>
-    <a href="/?sort=recent">🕒 Recent</a>
-    <a href="/?sort=title">🔤 Title</a>
+    <a href="/?sort=rating" class="<%= (locals.currentSort === 'rating') ? 'active' : '' %>">⭐ Rating</a>
+    <a href="/?sort=recent" class="<%= (!locals.currentSort || locals.currentSort === 'recent') ? 'active' : '' %>">🕒
+      Recent</a>
+    <a href="/?sort=title" class="<%= (locals.currentSort === 'title') ? 'active' : '' %>">🔤 Title</a>
   </div>
 
   <div class="book-grid">
@@ -65,7 +66,8 @@
   <script>
     // Add click handlers to all delete buttons
     document.querySelectorAll('.delete-btn').forEach(function (btn) {
-      btn.addEventListener('click', function () {
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation(); // Prevent card click
         var bookId = this.getAttribute('data-id');
         var bookTitle = this.getAttribute('data-title');
         document.getElementById('bookTitleToDelete').textContent = bookTitle;

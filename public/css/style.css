@@ -131,10 +131,12 @@ body {
   font-size: 0.95rem;
 }
 
-.sort-bar a:hover {
+.sort-bar a:hover,
+.sort-bar a.active {
   background: var(--primary);
   color: white;
   transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
 }
 
 /* Grid & Cards */
@@ -142,6 +144,9 @@ body {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 2rem;
+  justify-content: center;
+  /* Center grid items if they don't fill the row */
+  padding-bottom: 2rem;
 }
 
 .book-card {
