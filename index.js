@@ -2,6 +2,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import pg from "pg";
 import env from "dotenv";
+import axios from "axios";
 
 const app = express();
 const port = 3000;
@@ -34,6 +35,41 @@ function sortLocalBooks(books, sort) {
   return sorted;
 }
 
+async function getCoverFromOpenLibrary(title, author) {
+  // The Covers API doesn’t technically need Axios, but it’s a lot easier to use.
+  try {
+    const response = await axios.get(
+      "https://openlibrary.org/search.json",
+      {
+        params: {
+          title: title,
+          author: author,
+          limit: 1,
+        },
+      }
+    );
+
+    const book = response.data.docs[0];
+
+    if (!book) return "/images/IMG_1644.JPEG";
+
+    // Priority: ISBN → cover_i → fallback
+    if (book.isbn && book.isbn.length > 0) {
+      return `https://covers.openlibrary.org/b/isbn/${book.isbn[0]}-L.jpg`;
+    }
+
+    if (book.cover_i) {
+      return `https://covers.openlibrary.org/b/id/${book.cover_i}-L.jpg`;
+    }
+
+    return "/images/IMG_1644.JPEG";
+  } catch (err) {
+    console.log("Open Library API err:", err.message);
+    return "/images/IMG_1644.JPEG";
+  }
+}
+
+
 app.get("/", async (req, res) => {
   let sort = req.query.sort;
   let booksToShow = []
@@ -64,7 +100,9 @@ app.get("/add", (req, res) => {
 app.post("/add", async (req, res) => {
   try {
     let { title, author, notes, rating, date_read, cover_url } = req.body
-    if (!cover_url) cover_url = "/images/IMG_1644.JPEG";
+
+    cover_url = await getCoverFromOpenLibrary(title, author);
+
     const result = await db.query(
       "INSERT INTO books (title, author, notes, rating, date_read, cover_url) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
       [title, author, notes, rating, date_read, cover_url]
@@ -132,6 +170,7 @@ app.post("/edit/:id", async (req, res) => {
   try {
     const id = req.params.id;
     const { title, author, notes, rating, date_read, cover_url } = req.body;
+
     await db.query(
       "UPDATE books SET title = $1, author = $2, notes = $3, rating = $4, date_read = $5, cover_url = $6 WHERE id = $7",
       [title, author, notes, rating, date_read, cover_url, id]
@@ -139,6 +178,7 @@ app.post("/edit/:id", async (req, res) => {
   } catch (err) {
     console.log(err);
     const bookIndex = books.findIndex(b => b.id == req.params.id);
+
     if (bookIndex !== -1) {
       books[bookIndex] = {
         ...books[bookIndex],
@@ -158,7 +198,6 @@ app.post("/delete/:id", async (req, res) => {
   try {
     const id = req.params.id;
     const result = await db.query("DELETE FROM books WHERE id = $1", [id]);
-    console.log(id, result);
   } catch (err) {
     console.log(err);
     const bookIndex = books.findIndex(b => b.id == req.params.id);
